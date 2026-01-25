@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
 #include <string.h>
 #include <math.h>
 
@@ -22,7 +23,13 @@
 void CalcObservation(PSAT_OBSERVATION Obs, PSATELLITE_PARAM SatParam, unsigned int FreqSelect);
 void SetSysObsType(GnssSystem system, unsigned int ObsType[], unsigned int FreqSelect);
 
-int main()
+static void PrintUsage(const char* exe)
+{
+	fprintf(stderr, "Usage: %s <config.json>\n", (exe && exe[0]) ? exe : "JsonObsGen");
+	fprintf(stderr, "Example: %s test_obs2.json\n", (exe && exe[0]) ? exe : "JsonObsGen");
+}
+
+int main(int argc, char* argv[])
 {
 	int i, index;
 	GNSS_TIME time;
@@ -55,7 +62,22 @@ int main()
 
 	memset(&DelayConfig, 0, sizeof(DelayConfig));
 
-	JsonTree.ReadFile("test_obs2.json");
+	// JSON configuration file must be passed as the first command-line argument.
+	if (argc < 2 || strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0)
+	{
+		PrintUsage(argv[0]);
+		return (argc < 2) ? 1 : 0;
+	}
+	const char* configJson = argv[1];
+	FILE* cfg = fopen(configJson, "rb");
+	if (cfg == NULL)
+	{
+		fprintf(stderr, "ERROR: cannot open config JSON file: %s\n", configJson);
+		return 2;
+	}
+	fclose(cfg);
+
+	JsonTree.ReadFile(configJson);
 	Object = JsonTree.GetRootObject();
 	AssignParameters(Object, &UtcTime, &StartPos, &StartVel, &Trajectory, &NavData, &OutputParam, &PowerControl, NULL);
 

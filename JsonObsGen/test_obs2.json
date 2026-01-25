@@ -3,9 +3,9 @@
 	"description": "test file with the same settings as test_obs2.xml",
 	"time": {
 		"type": "UTC",
-    "year": 2021,
-    "month": 6,
-    "day": 19,
+    "year": 2026,
+    "month": 1,
+    "day": 11,
     "hour": 10,
     "minute": 5,
     "second": 30
@@ -135,7 +135,7 @@
   },
   "ephemeris": {
     "type": "RINEX",
-    "name": "..\/EphData\/BRDC00IGS_R_20211700000_01D_MN.rnx"
+    "name": "..\/EphData\/BRDC00IGS_R_20260110000_01D_MN.rnx"
   },
   "output": {
     "type": "observation",
